@@ -1,4 +1,4 @@
-     // Sample movie data
+
         const movies = {
             nowShowing: [
                 {
@@ -7,7 +7,7 @@
                     genre: "Action, Adventure, Sci-Fi",
                     duration: "3h 1m",
                     synopsis: "After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
-                    poster: "film-thaghut.jpeg",
+                    poster: "img/film-thaghut.jpeg",
                     rating: "PG-13"
                 },
                 {
@@ -16,7 +16,7 @@
                     genre: "Action, Crime, Drama",
                     duration: "2h 56m",
                     synopsis: "When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption and question his family's involvement.",
-                    poster: "q1gd0a4nwhm68va.jpeg",
+                    poster: "img/q1gd0a4nwhm68va.jpeg",
                     rating: "PG-13"
                 },
                 {
@@ -25,7 +25,7 @@
                     genre: "Adventure, Sci-Fi",
                     duration: "2h 35m",
                     synopsis: "Feature adaptation of Frank Herbert's science fiction novel about the son of a noble family entrusted with the protection of the most valuable asset and most vital element in the galaxy.",
-                    poster: "the-crow-1_34.jpeg",
+                    poster: "img/the-crow-1_34.jpeg",
                     rating: "PG-13"
                 },
                 {
@@ -34,7 +34,7 @@
                     genre: "Action, Adventure, Thriller",
                     duration: "2h 43m",
                     synopsis: "James Bond has left active service. His peace is short-lived when Felix Leiter, an old friend from the CIA, turns up asking for help, leading Bond onto the trail of a mysterious villain armed with dangerous new technology.",
-                    poster: "rekomendasi-film-komedi-indonesia-1.jpg",
+                    poster: "img/rekomendasi-film-komedi-indonesia-1.jpg",
                     rating: "PG-13"
                 }
             ],
@@ -45,7 +45,7 @@
                     genre: "Action, Adventure, Drama",
                     duration: "2h 41m",
                     synopsis: "The people of Wakanda fight to protect their home from intervening world powers as they mourn the death of King T'Challa.",
-                    poster: "rekomendasi-film-komedi-indonesia-1.jpg",
+                    poster: "img/rekomendasi-film-komedi-indonesia-1.jpg",
                     rating: "PG-13",
                     releaseDate: "November 11, 2023"
                 },
@@ -358,19 +358,15 @@
             }
         }
 
-        // Toggle seat selection
         function toggleSeatSelection(event) {
             const seat = event.target;
-            
-            // Don't allow selection of occupied seats
+
             if (seat.classList.contains('occupied')) return;
-            
-            // Toggle selection
+
             if (seat.classList.contains('selected')) {
                 seat.classList.remove('selected');
                 seat.classList.add('available');
-                
-                // Remove from booking data
+
                 const seatIndex = currentBooking.seats.findIndex(s => 
                     s.row === seat.dataset.row && s.number === parseInt(seat.dataset.number)
                 );
@@ -380,41 +376,34 @@
             } else {
                 seat.classList.remove('available');
                 seat.classList.add('selected');
-                
-                // Add to booking data
+
                 currentBooking.seats.push({
                     row: seat.dataset.row,
                     number: parseInt(seat.dataset.number)
                 });
             }
-            
-            // Update summary
+
             updateSummary();
         }
 
-        // Update ticket type
         function updateTicketType(event) {
             currentBooking.ticketType = event.target.value;
             updateSummary();
         }
 
-        // Update booking summary
         function updateSummary() {
-            // Cinema
             const cinemaSelect = document.getElementById('cinema');
             if (cinemaSelect.value) {
                 currentBooking.cinema = cinemaSelect.options[cinemaSelect.selectedIndex].text;
                 document.getElementById('summary-cinema').textContent = currentBooking.cinema;
                 document.getElementById('summary-cinema-final').textContent = currentBooking.cinema;
             }
-            
-            // Date
+
             const dateInput = document.getElementById('date');
             if (dateInput.value) {
                 currentBooking.date = dateInput.value;
             }
-            
-            // Seats
+
             if (currentBooking.seats.length > 0) {
                 const seatsText = currentBooking.seats.map(seat => `${seat.row}${seat.number}`).join(', ');
                 document.getElementById('summary-seats').textContent = seatsText;
@@ -423,23 +412,20 @@
                 document.getElementById('summary-seats').textContent = '-';
                 document.getElementById('summary-seats-final').textContent = '-';
             }
-            
-            // Ticket type
+
             document.getElementById('summary-ticket-type').textContent = 
                 document.getElementById('ticket-type').options[document.getElementById('ticket-type').selectedIndex].text.split(' -')[0];
             
             document.getElementById('summary-ticket-type-final').textContent = 
                 `${document.getElementById('ticket-type').options[document.getElementById('ticket-type').selectedIndex].text.split(' -')[0]} (x${currentBooking.seats.length})`;
-            
-            // Calculate and display total
+
             const total = currentBooking.seats.length * ticketPrices[currentBooking.ticketType];
             document.getElementById('summary-total').textContent = `Rp ${total.toLocaleString()}`;
             document.getElementById('summary-total-final').textContent = `Rp ${total.toLocaleString()}`;
         }
 
-        // Confirm payment and complete booking
         function confirmPayment() {
-            // Validate form
+           
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -449,22 +435,14 @@
                 alert('Please fill in all fields');
                 return;
             }
-            
-            // Update booking data
             currentBooking.customerInfo = { name, email, phone };
             currentBooking.paymentMethod = paymentMethod;
-            
-            // In a real app, you would send this data to a server
             console.log('Booking completed:', currentBooking);
-            
-            // Show confirmation
+
             alert(`Thank you for your booking, ${name}! Your tickets for ${currentBooking.movie.title} have been reserved. A confirmation has been sent to ${email}.`);
-            
-            // Close modal
             closeModal();
         }
 
-        // Close modal when clicking outside
         window.addEventListener('click', function(event) {
             const modal = document.getElementById('bookingModal');
             if (event.target === modal) {
